@@ -30,16 +30,25 @@ struct Generate: ParsableCommand {
 struct Train: ParsableCommand {
     @Argument(help: "number of passes")
     private var passes: Int
+	
+	@Flag(name: [.long, .short],help: "verbose")
+	private var verbose: Bool = false
+	
     func run() {
         let data = dataModel(width: 10, height: 10, countImageImages: 1000)
         print("before:")
         data.testError()
-//        for i in Progress(0..<passes){
-		for _ in (0..<passes){
-            data.train(passes: 1)
-            data.testError()
-            data.neuralNet.printWeights()
-        }
+		if(verbose){
+			for _ in (0..<passes){
+				data.train(passes: 1)
+				data.testError()
+				data.neuralNet.printWeights()
+			}
+		}else{
+			for _ in Progress(0..<passes){
+				data.train(passes: 1)
+			}
+		}
         print("after:")
         data.testError()
     }
