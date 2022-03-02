@@ -136,7 +136,6 @@ class NeuronalNetwork: Codable{
 				else{
 					line += " "
 				}
-				
 			}
 			print(line)
 		}
