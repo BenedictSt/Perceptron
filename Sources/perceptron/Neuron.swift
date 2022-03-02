@@ -145,8 +145,9 @@ class NeuronalNetwork: Codable{
 class dataModel: Codable{
 	let neuralNet: NeuronalNetwork
 	let images: [InputImage]
+	let testImages: [InputImage]
 	
-	init(width: Int, height: Int, countImageImages: Int){
+	init(width: Int, height: Int, countImageImages: Int, sharedImages: Bool){
 		self.neuralNet = NeuronalNetwork(width: width, height: height)
 		var lastWasRectangle = false
 		var tmpImages: [InputImage] = []
@@ -155,6 +156,13 @@ class dataModel: Codable{
 			lastWasRectangle.toggle()
 		}
 		images = tmpImages
+		//TODO: parameter to define number of testimages
+		if(sharedImages){
+			testImages = tmpImages
+		}else{
+			testImages = (0...50).map({_ in InputImage(rectangle: true, width: 10, height: 10)}) + (0...50).map({_ in InputImage(rectangle: false, width: 10, height: 10)})
+		}
+		
 	}
 	
 	public func train(passes: Int){
@@ -165,9 +173,9 @@ class dataModel: Codable{
 		}
 	}
 	
-	public func testError(){
+	public func testError(verbose: Bool) -> Float{
 		var fails = 0
-		for input in images {
+		for input in testImages {
 			if(neuralNet.predict(input: input) != input.rectangle){
 				fails += 1
 //				print("[Failed]".colored(.red))
@@ -175,8 +183,11 @@ class dataModel: Codable{
 //				print("[Success]".colored(.green))
 			}
 		}
-//		print("Tested \(images.count) images")
-//		print("Failed: \(fails)")
-		print("Accuracy: \(Float(images.count - fails) / Float(images.count) * 100)%")
+		if(verbose){
+			print("Tested \(testImages.count) images")
+			print("Failed: \(fails)")
+			print("Accuracy: \(Float(testImages.count - fails) / Float(testImages.count) * 100)%")
+		}
+		return Float(testImages.count - fails) / Float(testImages.count)
 	}
 }

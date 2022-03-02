@@ -11,8 +11,8 @@ struct Perceptron: ParsableCommand {
 
 struct Test: ParsableCommand {
 	func run() {
-		let data = dataModel(width: 10, height: 10, countImageImages: 20)
-		data.testError()
+		let data = dataModel(width: 10, height: 10, countImageImages: 20, sharedImages: true)
+		_ = data.testError(verbose: true)
 	}
 }
 
@@ -35,22 +35,20 @@ struct Train: ParsableCommand {
 	private var verbose: Bool = false
 	
 	func run() {
-		let data = dataModel(width: 10, height: 10, countImageImages: 1000)
+		let data = dataModel(width: 10, height: 10, countImageImages: 1000, sharedImages: false)
 		print("before:")
-		data.testError()
+		_ = data.testError(verbose: true)
 		if(verbose){
-			for _ in (0..<passes){
+			for pass in (0..<passes){
 				data.train(passes: 1)
-				data.testError()
+				print("pass: \(pass + 1); accuracy: \(data.testError(verbose: false))")
 				data.neuralNet.printWeights()
 			}
 		}else{
-			for _ in Progress(0..<passes){
-				data.train(passes: 1)
-			}
+			data.train(passes: passes)
 		}
 		print("after:")
-		data.testError()
+		_ = data.testError(verbose: true)
 	}
 }
 
