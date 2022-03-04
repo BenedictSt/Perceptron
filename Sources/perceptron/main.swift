@@ -31,11 +31,21 @@ struct Train: ParsableCommand {
 	@Argument(help: "number of passes")
 	private var passes: Int
 	
-	@Flag(name: [.long, .short],help: "verbose")
+
+    @Option(name: .shortAndLong, help: "verbose")
 	private var verbose: Bool = false
 	
+    @Option(name: .shortAndLong, help: "width")
+	private var width: Int?
+
+	@Option(name: .shortAndLong, help: "height")
+	private var height: Int?
+
+    @Option(name: .shortAndLong, help: "number of training images")
+    private var images: Int?
+
 	func run() {
-		let data = dataModel(width: 10, height: 10, countImageImages: 1000, sharedImages: false)
+		let data = dataModel(width: width ?? 10, height: height ?? 10, countImageImages: images ?? 1000, sharedImages: false)
 		print("before:")
 		_ = data.testError(verbose: true)
 		if(verbose){

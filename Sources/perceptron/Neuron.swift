@@ -160,7 +160,7 @@ class dataModel: Codable{
 		if(sharedImages){
 			testImages = tmpImages
 		}else{
-			testImages = (0...50).map({_ in InputImage(rectangle: true, width: 10, height: 10)}) + (0...50).map({_ in InputImage(rectangle: false, width: 10, height: 10)})
+			testImages = (0...50).map({_ in InputImage(rectangle: true, width: width, height: height)}) + (0...50).map({_ in InputImage(rectangle: false, width: width, height: height)})
 		}
 		
 	}
